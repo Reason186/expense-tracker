@@ -1,0 +1,37 @@
+.primaryButton {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background-color: #28c361;
+  color: #0f1115;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.primaryButton:hover {
+  background-color: #55ff91;
+}
+
+.secButton {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background-color: #afafaf;
+  color: #0f1115;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.secButton:hover {
+  background-color: #e6e6e6;
+}

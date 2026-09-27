@@ -1,0 +1,14 @@
+.topBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 80vw;
+  flex-shrink: 0;
+}
+
+.title {
+  color: #e8e9ed;
+  font-family: system-ui, sans-serif;
+  font-size: 22px;
+  margin: 0;
+}
