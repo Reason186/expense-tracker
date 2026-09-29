@@ -1,12 +1,18 @@
-import { primaryButton, secButton } from "./Button.module.css";
+import { primaryButton, deleteButton, secButton } from "./Button.module.css";
 
-export default function Button({ children, onClick, variant }) {
+export default function Button({ children, onClick, variant, action = "" }) {
   return (
     <button
-      className={variant === "primary" ? primaryButton : secButton}
+      className={
+        variant === "primary"
+          ? primaryButton
+          : variant === "delete"
+            ? deleteButton
+            : secButton
+      }
       onClick={onClick}
     >
-      {variant === "primary" ? (
+      {variant === "primary" && action === "add" ? (
         <svg
           width="16"
           height="16"

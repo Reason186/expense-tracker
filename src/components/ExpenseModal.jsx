@@ -1,27 +1,72 @@
 import Button from "./Button";
-import styles from "./AddExpenseModal.module.css";
-import { addExpense, isAddingExpense } from "../slices/expensesSlice";
+import styles from "./ExpenseModal.module.css";
+import {
+  editExpense,
+  addExpense,
+  toggleAdding,
+  toggleEditing,
+} from "../slices/expensesSlice";
 
-import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { useCallback, useEffect, useRef, useState } from "react";
 
-export default function AddExpenseModal() {
-  const [remarks, setRemarks] = useState("");
-  const [amount, setAmount] = useState("");
-  const [category, setCategory] = useState("");
-
+export default function ExpenseModal() {
   const dispatch = useDispatch();
+  const { expenses, selectedExpense } = useSelector((store) => store.expenses);
+  const expense = selectedExpense
+    ? expenses.find((expense) => expense.id === selectedExpense)
+    : null;
 
-  function onAddExpense() {
-    if (!remarks || !amount || !category) return;
-    dispatch(addExpense(remarks, amount, category));
+  const [remarks, setRemarks] = useState(expense?.remarks || "");
+  const [amount, setAmount] = useState(expense?.amount || "");
+  const [category, setCategory] = useState(expense?.category || "");
+
+  const inputRef = useRef();
+
+  useEffect(function () {
+    inputRef.current.focus();
+  }, []);
+
+  const handleAction = useCallback(
+    function () {
+      if (!remarks || !amount || !category) return;
+      dispatch(
+        selectedExpense
+          ? editExpense(selectedExpense, remarks, amount, category)
+          : addExpense(remarks, Number(amount), category),
+      );
+    },
+    [amount, category, dispatch, remarks, selectedExpense],
+  );
+
+  useEffect(
+    function () {
+      function handleKeyDown(e) {
+        if (e.code === "Enter") {
+          handleAction();
+        }
+      }
+
+      window.addEventListener("keydown", handleKeyDown);
+
+      return function () {
+        window.removeEventListener("keydown", handleKeyDown);
+      };
+    },
+    [handleAction],
+  );
+
+  function handleClose() {
+    dispatch(selectedExpense ? toggleEditing() : toggleAdding());
   }
 
   return (
     <div className={styles.overlay}>
       <div className={styles.modal}>
         <div className={styles.header}>
-          <h2 className={styles.title}>Add Expense</h2>
+          <h2 className={styles.title}>
+            {selectedExpense ? "Edit" : "Add"} Expense
+          </h2>
         </div>
 
         <form className={styles.form}>
@@ -39,6 +84,7 @@ export default function AddExpenseModal() {
               className={styles.input}
               value={remarks}
               onChange={(e) => setRemarks(e.target.value)}
+              ref={inputRef}
             />
           </div>
 
@@ -55,7 +101,12 @@ export default function AddExpenseModal() {
               placeholder="0.00"
               className={styles.input}
               value={amount}
-              onChange={(e) => setAmount(Number(e.target.value))}
+              onChange={(e) => {
+                const val = e.target.value;
+                if (/^\d*\.?\d*$/.test(val)) {
+                  setAmount(val);
+                }
+              }}
             />
           </div>
 
@@ -78,27 +129,21 @@ export default function AddExpenseModal() {
               <option value="Utilities">Utilities</option>
               <option value="Entertainment">Entertainment</option>
             </select>
-            <a
-              href="#"
-              className={styles.newCategoryLink}
-            >
-              + New category
-            </a>
           </div>
         </form>
 
         <div className={styles.footer}>
           <Button
             variant="secondary"
-            onClick={() => dispatch(isAddingExpense())}
+            onClick={handleClose}
           >
             Close
           </Button>
           <Button
             variant="primary"
-            onClick={onAddExpense}
+            onClick={handleAction}
           >
-            Create Expense
+            {selectedExpense ? "Confirm" : "Create Expense"}
           </Button>
         </div>
       </div>

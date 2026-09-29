@@ -33,5 +33,24 @@
 }
 
 .secButton:hover {
-  background-color: #e6e6e6;
+  background-color: #ffffff;
+}
+
+.deleteButton {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background-color: #c53838;
+  color: #0f1115;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.deleteButton:hover {
+  background-color: #ff5454;
 }

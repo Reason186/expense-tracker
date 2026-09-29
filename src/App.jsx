@@ -1,15 +1,20 @@
-import Expenses from "./components/Expenses";
-import "./App.css";
-import Topbar from "./components/Topbar";
 import { useSelector } from "react-redux";
-import AddExpenseModal from "./components/AddExpenseModal";
+import "./App.css";
+import Expenses from "./components/Expenses";
+import Topbar from "./components/Topbar";
+import ExpenseModal from "./components/ExpenseModal";
+import DeleteConfirmation from "./components/DeleteConfirmation";
 
 export default function App() {
-  const { isAdding } = useSelector((store) => store.expenses);
+  const { isAdding, isEditing, isDeleting } = useSelector(
+    (store) => store.expenses,
+  );
 
   return (
     <div className="app">
-      {isAdding && <AddExpenseModal />}
+      {isAdding && <ExpenseModal />}
+      {isEditing && <ExpenseModal />}
+      {isDeleting && <DeleteConfirmation />}
       <Topbar />
       <Expenses />
     </div>
