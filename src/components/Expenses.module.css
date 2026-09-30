@@ -10,6 +10,7 @@
   color: #e8e9ed;
   font-family: system-ui, sans-serif;
   overflow: hidden;
+  position: relative;
 }
 
 .header,

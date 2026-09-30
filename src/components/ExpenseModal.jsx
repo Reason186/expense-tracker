@@ -1,11 +1,15 @@
 import Button from "./Button";
 import styles from "./ExpenseModal.module.css";
+import NewCategoryModal from "./NewCategoryModal";
+import CategoryItem from "./CategoryItem";
+
 import {
   editExpense,
   addExpense,
   toggleAdding,
   toggleEditing,
 } from "../slices/expensesSlice";
+import { toggleAddingCategory } from "../slices/categoriesSlice";
 
 import { useDispatch, useSelector } from "react-redux";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -13,6 +17,10 @@ import { useCallback, useEffect, useRef, useState } from "react";
 export default function ExpenseModal() {
   const dispatch = useDispatch();
   const { expenses, selectedExpense } = useSelector((store) => store.expenses);
+  const { categories, isAddingCategory } = useSelector(
+    (store) => store.categories,
+  );
+
   const expense = selectedExpense
     ? expenses.find((expense) => expense.id === selectedExpense)
     : null;
@@ -42,7 +50,7 @@ export default function ExpenseModal() {
   useEffect(
     function () {
       function handleKeyDown(e) {
-        if (e.code === "Enter") {
+        if (e.code === "Enter" && !isAddingCategory) {
           handleAction();
         }
       }
@@ -53,7 +61,7 @@ export default function ExpenseModal() {
         window.removeEventListener("keydown", handleKeyDown);
       };
     },
-    [handleAction],
+    [handleAction, isAddingCategory],
   );
 
   function handleClose() {
@@ -124,11 +132,22 @@ export default function ExpenseModal() {
               onChange={(e) => setCategory(e.target.value)}
             >
               <option value="">Select a category</option>
-              <option value="Food">Food</option>
-              <option value="Transport">Transport</option>
-              <option value="Utilities">Utilities</option>
-              <option value="Entertainment">Entertainment</option>
+              {categories.map((category, i) => (
+                <CategoryItem
+                  category={category}
+                  key={i}
+                />
+              ))}
             </select>
+            <button
+              className={styles.newCategoryLink}
+              onClick={(e) => {
+                e.preventDefault();
+                dispatch(toggleAddingCategory());
+              }}
+            >
+              + New Category
+            </button>
           </div>
         </form>
 
@@ -147,6 +166,8 @@ export default function ExpenseModal() {
           </Button>
         </div>
       </div>
+
+      {isAddingCategory && <NewCategoryModal />}
     </div>
   );
 }

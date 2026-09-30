@@ -2,6 +2,7 @@ import { useSelector } from "react-redux";
 
 import styles from "./Expenses.module.css";
 import Expense from "./Expense";
+import StartMessage from "./StartMessage";
 
 export default function Expenses() {
   const { expenses } = useSelector((state) => state.expenses);
@@ -36,12 +37,16 @@ export default function Expenses() {
       </div>
 
       <ul className={styles.list}>
-        {expenses.map((expense) => (
-          <Expense
-            key={expense.id}
-            expense={expense}
-          />
-        ))}
+        {expenses.length !== 0 ? (
+          expenses.map((expense) => (
+            <Expense
+              key={expense.id}
+              expense={expense}
+            />
+          ))
+        ) : (
+          <StartMessage />
+        )}
       </ul>
     </div>
   );
