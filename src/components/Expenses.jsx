@@ -1,11 +1,42 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import styles from "./Expenses.module.css";
 import Expense from "./Expense";
 import StartMessage from "./StartMessage";
+import { useMemo } from "react";
+
+import { toggleIsFiltering } from "../slices/categoriesSlice";
+import CategoryFilter from "./CategoryFilter";
 
 export default function Expenses() {
   const { expenses } = useSelector((state) => state.expenses);
+  const { isFiltering, filteredCategories } = useSelector(
+    (state) => state.categories,
+  );
+  const dispatch = useDispatch();
+
+  function filterExpenses() {
+    let filteredExpenses = [];
+
+    if (filteredCategories.length === 0) return filteredExpenses;
+
+    expenses.map((expense) => {
+      if (filteredCategories.includes(expense.category)) {
+        filteredExpenses.push(expense);
+      }
+    });
+
+    return filteredExpenses;
+  }
+  const filteredExpenses = filterExpenses();
+
+  const displayedExpenses =
+    filteredCategories.length > 0 ? filteredExpenses : expenses;
+
+  const total = useMemo(
+    () => displayedExpenses.reduce((sum, expense) => sum + expense.amount, 0),
+    [displayedExpenses],
+  );
 
   return (
     <div className={styles.expensesTable}>
@@ -16,6 +47,10 @@ export default function Expenses() {
           <button
             className={styles.filterButton}
             title="Filter by category"
+            onClick={(e) => {
+              e.stopPropagation();
+              dispatch(toggleIsFiltering());
+            }}
           >
             <svg
               width="13"
@@ -31,14 +66,15 @@ export default function Expenses() {
               />
             </svg>
           </button>
+          {isFiltering && <CategoryFilter />}
         </span>
         <span className={styles.amountCol}>Amount</span>
         <span className={styles.actionsCol}>Actions</span>
       </div>
 
       <ul className={styles.list}>
-        {expenses.length !== 0 ? (
-          expenses.map((expense) => (
+        {displayedExpenses.length > 0 ? (
+          displayedExpenses.map((expense) => (
             <Expense
               key={expense.id}
               expense={expense}
@@ -48,6 +84,11 @@ export default function Expenses() {
           <StartMessage />
         )}
       </ul>
+
+      <div className={styles.totalRow}>
+        <span>Total</span>
+        <span className={styles.totalAmount}>${total.toFixed(2)}</span>
+      </div>
     </div>
   );
 }

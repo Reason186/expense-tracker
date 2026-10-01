@@ -112,7 +112,7 @@ export default function ExpenseModal() {
               onChange={(e) => {
                 const val = e.target.value;
                 if (/^\d*\.?\d*$/.test(val)) {
-                  setAmount(val);
+                  setAmount(Number(val));
                 }
               }}
             />
