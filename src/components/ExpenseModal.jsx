@@ -1,6 +1,5 @@
 import Button from "./Button";
 import styles from "./ExpenseModal.module.css";
-import NewCategoryModal from "./NewCategoryModal";
 import CategoryItem from "./CategoryItem";
 
 import {
@@ -9,7 +8,8 @@ import {
   toggleAdding,
   toggleEditing,
 } from "../slices/expensesSlice";
-import { toggleAddingCategory } from "../slices/categoriesSlice";
+
+import { addCategory } from "../slices/categoriesSlice";
 
 import { useDispatch, useSelector } from "react-redux";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -28,6 +28,11 @@ export default function ExpenseModal() {
   const [remarks, setRemarks] = useState(expense?.remarks || "");
   const [amount, setAmount] = useState(expense?.amount || "");
   const [category, setCategory] = useState(expense?.category || "");
+  const [categoryisActive, setCategoryIsActive] = useState(false);
+
+  const searchedCategories = categories.map((elem) =>
+    elem.toLowerCase().includes(category.toLowerCase()) ? elem : null,
+  );
 
   const inputRef = useRef();
 
@@ -38,13 +43,16 @@ export default function ExpenseModal() {
   const handleAction = useCallback(
     function () {
       if (!remarks || !amount || !category) return;
+      const newCategory = category.charAt(0).toUpperCase() + category.slice(1);
       dispatch(
         selectedExpense
-          ? editExpense(selectedExpense, remarks, amount, category)
-          : addExpense(remarks, Number(amount), category),
+          ? editExpense(selectedExpense, remarks, amount, newCategory)
+          : addExpense(remarks, Number(amount), newCategory),
       );
+
+      if (!categories.includes(newCategory)) dispatch(addCategory(newCategory));
     },
-    [amount, category, dispatch, remarks, selectedExpense],
+    [amount, category, dispatch, remarks, selectedExpense, categories],
   );
 
   useEffect(
@@ -66,6 +74,10 @@ export default function ExpenseModal() {
 
   function handleClose() {
     dispatch(selectedExpense ? toggleEditing() : toggleAdding());
+  }
+
+  function handleSelectCategory(e) {
+    setCategory(e.target.id);
   }
 
   return (
@@ -125,29 +137,29 @@ export default function ExpenseModal() {
             >
               Category
             </label>
-            <select
+            <input
               id="category"
               className={styles.select}
+              placeholder="e.g. Food"
               value={category}
               onChange={(e) => setCategory(e.target.value)}
-            >
-              <option value="">Select a category</option>
-              {categories.map((category, i) => (
-                <CategoryItem
-                  category={category}
-                  key={i}
-                />
-              ))}
-            </select>
-            <button
-              className={styles.newCategoryLink}
-              onClick={(e) => {
-                e.preventDefault();
-                dispatch(toggleAddingCategory());
-              }}
-            >
-              + New Category
-            </button>
+              onFocus={() => setCategoryIsActive(true)}
+              onBlur={() => setCategoryIsActive(false)}
+            />
+            {categoryisActive && searchedCategories.at(0) !== null && (
+              <ul className={styles.categoryDropdown}>
+                {searchedCategories.map(
+                  (category, i) =>
+                    category && (
+                      <CategoryItem
+                        category={category}
+                        key={i}
+                        selectCategory={handleSelectCategory}
+                      />
+                    ),
+                )}
+              </ul>
+            )}
           </div>
         </form>
 
@@ -166,8 +178,6 @@ export default function ExpenseModal() {
           </Button>
         </div>
       </div>
-
-      {isAddingCategory && <NewCategoryModal />}
     </div>
   );
 }

@@ -15,8 +15,6 @@ export default function CategoryFilter() {
     function () {
       function handleClick(e) {
         if (filterRef.current && filterRef.current.contains(e.target)) {
-          console.log(filterRef.current);
-          console.log(e.target);
           return;
         }
 

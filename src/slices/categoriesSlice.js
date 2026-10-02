@@ -2,7 +2,6 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   categories: ["Food", "Transport", "Utilities", "Entertainment"],
-  isAddingCategory: false,
   isFiltering: false,
   filteredCategories: [],
 };
@@ -11,12 +10,8 @@ const categoriesSlice = createSlice({
   name: "categories",
   initialState,
   reducers: {
-    toggleAddingCategory(state) {
-      state.isAddingCategory = !state.isAddingCategory;
-    },
     addCategory(state, action) {
       state.categories.push(action.payload);
-      state.isAddingCategory = false;
     },
     toggleIsFiltering(state) {
       state.isFiltering = !state.isFiltering;
@@ -37,7 +32,6 @@ const categoriesSlice = createSlice({
 });
 
 export const {
-  toggleAddingCategory,
   addCategory,
   toggleIsFiltering,
   addFilterItem,
