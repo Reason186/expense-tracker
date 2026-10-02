@@ -30,8 +30,8 @@ export default function ExpenseModal() {
   const [category, setCategory] = useState(expense?.category || "");
   const [categoryisActive, setCategoryIsActive] = useState(false);
 
-  const searchedCategories = categories.map((elem) =>
-    elem.toLowerCase().includes(category.toLowerCase()) ? elem : null,
+  const searchedCategories = categories.filter((elem) =>
+    elem.toLowerCase().includes(category.toLowerCase()),
   );
 
   const inputRef = useRef();
@@ -146,7 +146,7 @@ export default function ExpenseModal() {
               onFocus={() => setCategoryIsActive(true)}
               onBlur={() => setCategoryIsActive(false)}
             />
-            {categoryisActive && searchedCategories.at(0) !== null && (
+            {categoryisActive && searchedCategories.length > 0 && (
               <ul className={styles.categoryDropdown}>
                 {searchedCategories.map(
                   (category, i) =>

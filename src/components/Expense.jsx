@@ -2,12 +2,18 @@ import { useDispatch } from "react-redux";
 
 import styles from "./Expense.module.css";
 import { toggleDeleting, toggleEditing } from "../slices/expensesSlice";
+import { useSortable } from "@dnd-kit/react/sortable";
 
-export default function Expense({ expense }) {
+export default function Expense({ expense, id, index }) {
   const dispatch = useDispatch();
 
+  const { ref } = useSortable({ id, index });
+
   return (
-    <li className={styles.row}>
+    <li
+      className={styles.row}
+      ref={ref}
+    >
       <span className={styles.remarks}>{expense.remarks}</span>
       <span>
         <span className={styles.category}>{expense.category}</span>

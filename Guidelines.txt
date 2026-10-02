@@ -1,5 +1,0 @@
-Add/delete/edit expenses, filter by category, show running total
-
-Focus on: createSlice, configureStore, useSelector/useDispatch, writing "mutating" logic with Immer inside reducers
-
-Add a twist: derive totals using a memoized selector with createSelector (from reselect, bundled in RTK) instead of recalculating in the component

@@ -1,4 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
+import { DragDropProvider } from "@dnd-kit/react";
+import { move } from "@dnd-kit/helpers";
 
 import styles from "./Expenses.module.css";
 import Expense from "./Expense";
@@ -6,6 +8,7 @@ import StartMessage from "./StartMessage";
 import { useMemo } from "react";
 
 import { toggleIsFiltering } from "../slices/categoriesSlice";
+import { reorderExpenses } from "../slices/expensesSlice";
 import CategoryFilter from "./CategoryFilter";
 
 export default function Expenses() {
@@ -72,18 +75,31 @@ export default function Expenses() {
         <span className={styles.actionsCol}>Actions</span>
       </div>
 
-      <ul className={styles.list}>
-        {displayedExpenses.length > 0 ? (
-          displayedExpenses.map((expense) => (
-            <Expense
-              key={expense.id}
-              expense={expense}
-            />
-          ))
-        ) : (
-          <StartMessage />
-        )}
-      </ul>
+      <DragDropProvider
+        onDragEnd={(event) => {
+          if (filteredCategories.length > 0) return;
+          if (event.canceled) return;
+
+          const reorderedExpenses = move(expenses, event);
+
+          dispatch(reorderExpenses(reorderedExpenses));
+        }}
+      >
+        <ul className={styles.list}>
+          {displayedExpenses.length > 0 ? (
+            displayedExpenses.map((expense, index) => (
+              <Expense
+                key={expense.id}
+                id={expense.id}
+                index={index}
+                expense={expense}
+              />
+            ))
+          ) : (
+            <StartMessage />
+          )}
+        </ul>
+      </DragDropProvider>
 
       <div className={styles.totalRow}>
         <span>Total</span>
