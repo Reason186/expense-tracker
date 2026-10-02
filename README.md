@@ -30,21 +30,30 @@ A responsive web application built with **React** and **Redux Toolkit (RTK)** to
 ## 📁 Project Structure
 
 ```text
-src/
-├── app/
-│   └── store.js            # Redux store configuration
-├── features/
-│   └── expenses/
-│       ├── expensesSlice.js # Slice containing reducers & Immer mutating logic
-│       └── ...
-├── components/
-│   ├── ExpenseForm.jsx      # Add/Edit expense form
-│   ├── ExpenseList.jsx      # Drag-and-drop container & vertical list
-│   ├── ExpenseItem.jsx      # Individual expense tile component
-│   ├── CategoryFilter.jsx   # Category filter toolbar
-│   └── TotalSummary.jsx     # Running total display
-├── utils/
-│   └── localStorage.js      # Helpers for loading/saving state
-├── App.jsx
-└── main.jsx
+├── src
+│   ├── App.css
+│   ├── App.jsx
+│   ├── components
+│   │   ├── Button.jsx
+│   │   ├── Button.module.css
+│   │   ├── CategoryFilter.jsx
+│   │   ├── CategoryFilter.module.css
+│   │   ├── CategoryItem.jsx
+│   │   ├── DeleteConfirmation.jsx
+│   │   ├── Expense.jsx
+│   │   ├── ExpenseModal.jsx
+│   │   ├── ExpenseModal.module.css
+│   │   ├── Expense.module.css
+│   │   ├── Expenses.jsx
+│   │   ├── Expenses.module.css
+│   │   ├── FilterItem.jsx
+│   │   ├── StartMessage.jsx
+│   │   ├── Topbar.jsx
+│   │   └── Topbar.module.css
+│   ├── index.css
+│   ├── main.jsx
+│   ├── slices
+│   │   ├── categoriesSlice.js
+│   │   └── expensesSlice.js
+│   └── store.js
 ```
