@@ -1,16 +1,50 @@
-# React + Vite
+# Expense Tracker 💰
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A responsive web application built with **React** and **Redux Toolkit (RTK)** to track, filter, and organize daily expenses. This project demonstrates core RTK state management principles combined with drag-and-drop interactive UI and persistent local browser storage.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## 🚀 Features
 
-## React Compiler
+- **Core Expense Management**: Add, edit, and delete expense entries seamlessly.
+- **Category Filtering**: Filter expenses by specific categories (e.g., Food, Transport, Utilities).
+- **Dynamic Total**: Real-time summary displaying running balance and categorized totals.
+- **Drag-and-Drop Reordering**: Interactive vertical list sorting for expense tiles using drag-and-drop.
+- **Data Persistence**: Automatic syncing with `localStorage` so data stays intact across page refreshes.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the ESLint configuration
+## 🛠️ Tech Stack & Key Concepts
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- **React** (Functional Components, Hooks)
+- **Redux Toolkit**:
+  - `createSlice`: Centralized slice state containing reducer logic and generated action creators.
+  - `configureStore`: Standardized Redux store setup with built-in middleware.
+  - `useSelector` / `useDispatch`: Hook-based component interaction with the Redux store.
+  - **Immer Integration**: Writing clear "mutating" logic inside slice reducers safely handled under the hood.
+- **HTML5 Drag and Drop API** (or `@hello-pangea/dnd` / `react-beautiful-dnd`)
+- **Browser LocalStorage API** for persistent state hydration.
+
+---
+
+## 📁 Project Structure
+
+```text
+src/
+├── app/
+│   └── store.js            # Redux store configuration
+├── features/
+│   └── expenses/
+│       ├── expensesSlice.js # Slice containing reducers & Immer mutating logic
+│       └── ...
+├── components/
+│   ├── ExpenseForm.jsx      # Add/Edit expense form
+│   ├── ExpenseList.jsx      # Drag-and-drop container & vertical list
+│   ├── ExpenseItem.jsx      # Individual expense tile component
+│   ├── CategoryFilter.jsx   # Category filter toolbar
+│   └── TotalSummary.jsx     # Running total display
+├── utils/
+│   └── localStorage.js      # Helpers for loading/saving state
+├── App.jsx
+└── main.jsx
+```
